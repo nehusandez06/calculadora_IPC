@@ -10,10 +10,10 @@ const SERIES = {
     columns: ["Nivel general","Alimentos y bebidas no alcohólicas","Bebidas alcohólicas y tabaco","Prendas de vestir y calzado","Vivienda, agua, electricidad y otros combustibles","Equipamiento y manteni-miento del hogar","Salud","Transporte","Comunicaciones","Recreación y cultura","Educación","Restaurantes y hoteles","Otros bienes y servicios","Estacional","Núcleo","Regulados","Bienes","Servicios"],
     segments: [
       {to:"2006-12", label:"IPC GBA (INDEC) empalmado con series anteriores"},
-      {to:"2012-07", label:"IPC San Luis"},
-      {to:"2016-04", label:"IPC CABA"},
-      {to:"2016-12", label:"IPC GBA (INDEC)"},
-      {to:"2026-06", label:"IPC Nacional (INDEC)"},
+      {to:"2012-07", label:"IPC San Luis base 2003=100"},
+      {to:"2016-04", label:"IPC CABA base julio 2011-junio 2012=100"},
+      {to:"2016-12", label:"IPC GBA (INDEC) base diciembre 2016=100"},
+      {to:"2026-06", label:"IPC Nacional (INDEC) base diciembre 2016=100"},
     ]
   },
   gba_slj_ipcba_gba_nacional: {
@@ -24,10 +24,10 @@ const SERIES = {
     columns: ["Nivel general","Alimentos y bebidas no alcohólicas","Bebidas alcohólicas y tabaco","Prendas de vestir y calzado","Vivienda, agua, electricidad y otros combustibles","Equipamiento y manteni-miento del hogar","Salud","Transporte","Comunicaciones","Recreación y cultura","Educación","Restaurantes y hoteles","Otros bienes y servicios","Estacional","Núcleo","Regulados","Bienes","Servicios"],
     segments: [
       {to:"2006-12", label:"IPC GBA (INDEC) empalmado con series anteriores"},
-      {to:"2012-07", label:"IPC promedio ponderado San Luis y Jujuy"},
-      {to:"2016-04", label:"IPC CABA"},
-      {to:"2016-12", label:"IPC GBA (INDEC)"},
-      {to:"2026-06", label:"IPC Nacional (INDEC)"},
+      {to:"2012-07", label:"IPC promedio ponderado San Luis y Jujuy base diciembre 2006=100"},
+      {to:"2016-04", label:"IPC CABA base julio 2011-junio 2012=100"},
+      {to:"2016-12", label:"IPC GBA (INDEC) base diciembre 2016=100"},
+      {to:"2026-06", label:"IPC Nacional (INDEC) base diciembre 2016=100"},
     ]
   },
   gba_sl_ipcba_gba: {
@@ -38,9 +38,9 @@ const SERIES = {
     columns: ["Nivel general","Alimentos y bebidas no alcohólicas","Bebidas alcohólicas y tabaco","Prendas de vestir y calzado","Vivienda, agua, electricidad y otros combustibles","Equipa-miento y manteni-miento del hogar","Salud","Transporte","Comunicaciones","Recreación y cultura","Educación","Restaurantes y hoteles","Otros bienes y servicios","Estacional","Núcleo","Regulados","Bienes","Servicios"],
     segments: [
       {to:"2006-12", label:"IPC GBA (INDEC) empalmado con series anteriores"},
-      {to:"2012-07", label:"IPC San Luis"},
-      {to:"2016-04", label:"IPC CABA"},
-      {to:"2026-06", label:"IPC GBA (INDEC)"},
+      {to:"2012-07", label:"IPC San Luis base 2003=100"},
+      {to:"2016-04", label:"IPC CABA base julio 2011-junio 2012=100"},
+      {to:"2026-06", label:"IPC GBA (INDEC) base diciembre 2016=100"},
     ]
   },
   gba_sl_ipcba_gba_nacional_nacional2021: {
@@ -51,10 +51,10 @@ const SERIES = {
     columns: ["Nivel general","Alimentos y bebidas no alcohólicas","Bebidas alcohólicas y tabaco","Prendas de vestir y calzado","Vivienda, agua, electricidad y otros combustibles","Equipamiento y manteni-miento del hogar","Salud","Transporte","Comunicaciones","Recreación y cultura","Educación","Restaurantes y hoteles","Otros bienes y servicios","Estacional","Núcleo","Regulados","Bienes","Servicios"],
     segments: [
       {to:"2006-12", label:"IPC GBA (INDEC) empalmado con series anteriores"},
-      {to:"2012-07", label:"IPC San Luis"},
-      {to:"2016-04", label:"IPC CABA"},
-      {to:"2016-12", label:"IPC GBA (INDEC)"},
-      {to:"2021-12", label:"IPC Nacional (INDEC)"},
+      {to:"2012-07", label:"IPC San Luis base 2003=100"},
+      {to:"2016-04", label:"IPC CABA base julio 2011-junio 2012=100"},
+      {to:"2016-12", label:"IPC GBA (INDEC) base diciembre 2016=100"},
+      {to:"2021-12", label:"IPC Nacional (INDEC) base diciembre 2016=100"},
       {to:"2026-06", label:"IPC Nacional base 2021=100, ponderadores ENGHo 17-18 (estimación propia)"},
     ]
   },
@@ -66,7 +66,7 @@ const SERIES = {
     columns: ["Nivel General","Alimentos y bebidas no alcohólicas","Bebidas alcohólicas y tabaco","Prendas de vestir y calzado","Vivienda, agua, electricidad, gas y otros combustibles","Equipamiento y mantenimiento del hogar","Salud","Transporte","Información y comunicación","Recreación y cultura","Educación","Restaurantes y hoteles","Otros bienes y servicios","Bienes","Servicios","Estacionales ","Regulados","Resto IPCBA"],
     segments: [
       {to:"2006-12", label:"IPC GBA (INDEC) empalmado con series anteriores"},
-      {to:"2012-07", label:"IPC San Luis"},
+      {to:"2012-07", label:"IPC San Luis base 2003=100"},
       {to:"2026-06", label:"IPC CABA base 2021=100, empalmado, 12 divisiones"},
     ]
   },
@@ -78,7 +78,7 @@ const SERIES = {
     columns: ["Nivel General","Alimentos y bebidas no alcohólicas","Bebidas alcohólicas y tabaco","Prendas de vestir y calzado","Vivienda, agua, electricidad, gas y otros combustibles","Equipamiento y mantenimiento del hogar","Salud","Transporte","Información y comunicación","Recreación y cultura","Educación","Restaurantes y hoteles","Seguros y servicios financieros","Cuidado personal, protección social y otros productos","Bienes","Servicios","Estacionales ","Regulados","Resto IPCBA"],
     segments: [
       {to:"2006-12", label:"IPC GBA (INDEC) empalmado con series anteriores"},
-      {to:"2012-07", label:"IPC San Luis"},
+      {to:"2012-07", label:"IPC San Luis base 2003=100"},
       {to:"2026-06", label:"IPC CABA base 2021=100, empalmado, 13 divisiones"},
     ]
   },
