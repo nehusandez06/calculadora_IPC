@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora de IPC — series empalmadas 1965–2026</title>
+<meta name="description" content="Calculadora de inflación argentina con 6 series de IPC empalmadas (San Luis, CABA, GBA, Nacional) desde 1965.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">Calculadora de inflación — Argentina</p>
+    <h1>Sesenta años de precios,<br><em>empalmados</em> a mano.</h1>
+    <p class="sub">
+      Elegí una serie de IPC, un rubro y dos fechas: la calculadora te dice cuánto varió el nivel general
+      (o el rubro elegido) y qué metodología cubrió cada tramo.
+    </p>
+    <div class="hero-stat" id="heroStat"><!-- se completa por JS --></div>
+  </header>
+
+  <section id="seccion-serie">
+    <h2>1. Elegí la serie</h2>
+    <p class="section-note">Todas arrancan del mismo IPC GBA histórico; difieren en qué empalman después de 2007, intervención del INDEC.</p>
+    <div class="series-picker" id="seriePicker"></div>
+
+    <div class="ribbon" id="ribbon" aria-hidden="true"></div>
+    <div class="ribbon-legend" id="ribbonLegend"></div>
+    <p class="field-help warn" id="globalError" style="display:none;"></p>
+  </section>
+
+  <section id="seccion-form">
+    <h2>2. Rubro, fechas y monto</h2>
+    <div class="grid">
+      <div>
+        <label for="rubroSelect">Rubro / apertura</label>
+        <select id="rubroSelect"></select>
+      </div>
+      <div>
+        <label for="montoInput">Monto en la fecha de inicio ($)</label>
+        <input type="number" id="montoInput" value="1000" min="0" step="any">
+      </div>
+      <div>
+        <label for="desdeInput">Desde</label>
+        <select id="desdeInput"></select>
+        <p class="field-help" id="desdeHelp"></p>
+      </div>
+      <div>
+        <label for="hastaInput">Hasta</label>
+        <select id="hastaInput"></select>
+        <p class="field-help" id="hastaHelp"></p>
+      </div>
+    </div>
+    <button class="calc" id="calcBtn">Calcular</button>
+
+    <div class="result" id="result">
+      <p class="headline" id="resultHeadline"></p>
+      <p class="sub" id="resultSub"></p>
+      <div class="breakdown" id="resultBreakdown"></div>
+    </div>
+
+    <div class="chart-wrap" id="chartWrap" style="display:none;">
+      <canvas id="chartCanvas" height="220"></canvas>
+    </div>
+  </section>
+
+  <footer>
+    <p>
+      Series construidas a partir de empalmes de IPC GBA (INDEC), IPC San Luis / San Luis-Jujuy, IPC CABA e IPC Nacional (INDEC),
+      con una reponderación propia (ENGHo 17-18) a partir de 2022. Sin fines oficiales.
+    </p>
+  </footer>
+</div>
+
+<script src="data/series.js"></script>
+<script src="data/bundle.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
