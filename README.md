@@ -41,16 +41,103 @@ el rubro elegido — no un date-picker nativo. Esto es a propósito: `input
 type="month"` no anda en Firefox (cae a texto libre) y eso rompía la validación.
 Con el select es imposible mandar una fecha que no exista en los datos.
 
+## Cómo actualizar cuando salen datos nuevos
+
+Hay tres formas, de la más a la menos recomendable. Las tres regeneran
+`data/bundle.js` solas al final.
+
+### 1. Directo de las fuentes oficiales (la recomendada)
+
+Lee los archivos tal cual se descargan de INDEC e IDECBA, sin pasar por tu
+Excel ni por exports manuales. Empalma automáticamente calibrando contra lo
+que ya tenés en `data/`.
+
+```
+python3 scripts/actualizar_desde_fuentes_oficiales.py \
+  --indec sh_ipc_MM_AA.xls \
+  --idecba-aperturas IPCBA_base_2021100-Principales_aperturas_indices.xlsx \
+  --idecba-bs-svcios IPCBA_base_2021100-Evol_gral_bs_svcios.xlsx \
+  --idecba-estac-reg-resto IPCBA_base_2021100-Evol_gral_estac_reg_resto.xlsx
+```
+
+Pasále solo los archivos que tengas nuevos (todos los flags son opcionales).
+De dónde sale cada uno:
+
+- `--indec`: la "serie histórica" de INDEC (`sh_ipc_MM_AA.xls`), tal cual se
+  descarga de indec.gob.ar. Actualiza `gba_sl_ipcba_gba_nacional` y
+  `gba_slj_ipcba_gba_nacional` (bloque "Total nacional") y `gba_sl_ipcba_gba`
+  (bloque "Región GBA").
+- `--idecba-aperturas` / `--idecba-bs-svcios` / `--idecba-estac-reg-resto`:
+  los tres reportes "IPCBA base 2021=100" de IDECBA (Principales aperturas,
+  Evolución bienes/servicios, Evolución estacionales/regulados/resto).
+  Actualizan `gba_sl_ipcba13`.
+
+Cómo empalma: para cada serie busca el último mes que ya tenés en
+`data/<serie>.csv`, lo compara contra el mismo mes en el archivo nuevo, y
+calcula el factor de escala entre ambos. Si da ~1.0 (esperable, si es
+continuación real de la misma serie) aplica ese factor a los meses
+*posteriores* a tu último dato y los agrega ya empalmados. Si el factor se
+aleja de 1.0, **no toca nada** y avisa — mejor eso que empalmar mal.
+
+**`gba_sl_ipcba12` (12 divisiones) no se actualiza con este método** — IDECBA
+dejó de publicar esa apertura con la base 2021=100, solo la de 13. Queda
+congelada en su último dato real hasta que decidamos derivarla de la de 13
+divisiones o retirarla del selector.
+
+**`gba_sl_ipcba_gba_nacional_nacional2021` tampoco se toca acá** — usa tu
+estimación propia (ENGHo 17-18) desde 2022. El día que armes el archivo "tipo
+INDEC" con tus valores, en principio entra por el mismo `--indec` (mismo
+formato de fila/columna que la serie histórica oficial).
+
+### 2. Desde tu Excel maestro
+
+```
+python3 scripts/actualizar_desde_excel.py /ruta/a/Inflación.xlsx
+```
+
+Lee directo de las hojas del libro (`Pond2`, `Pond`, `GBA-SL-IPCBA-GBA`,
+`Pond2021`, `IPCBA`, `IPCBA12` — ver `SHEET_MAP` en el script). Cada hoja
+repite el bloque de columnas varias veces al costado (variación % mensual,
+nivel encadenado, etc.); el script calibra solo cuál repetición es el nivel
+real, probando cada bloque contra el CSV que ya tenés.
+
+Dos salvedades que aprendimos con el primer uso real:
+
+- **Nunca toma el mes calendario en curso ni posteriores** — no puede haber
+  dato oficial publicado de un mes que todavía no terminó.
+- Si alguna hoja tiene proyección/estimación propia mezclada más allá de la
+  fecha real (nos pasó con "San Luis-Jujuy" y con "13 divisiones"), usá
+  `SIBLING_MAP` dentro del script: recorta la serie hija a lo que su serie
+  madre ya tiene validado, en vez de creerse cualquier fecha con datos.
+
+### 3. Desde exports `.txt` sueltos (la manual, para casos puntuales)
+
+```
+python3 scripts/actualizar_datos.py /ruta/a/los/nuevos/*.txt
+```
+
+Mismo formato `.txt` UTF-16 tab-delimitado de siempre. Reconoce el archivo
+por nombre (`FILENAME_TO_KEY` en el script) y regenera el CSV correspondiente.
+
+---
+
+Corriendo `python3 scripts/actualizar_datos.py` sin argumentos, en cualquier
+momento, solo regenera `data/bundle.js` a partir de los CSV que ya están —
+útil si tocás un CSV a mano.
+
 ## Cómo agregar una serie nueva más adelante
 
-Regenerá `data/bundle.js` a partir de tus CSV (hay un script de una línea en los
-comentarios de este README... en realidad, avisame y te lo actualizo yo). En
-`data/series.js`, agregá una entrada al objeto `SERIES` con `label`, `short`,
+En `data/series.js`, agregá una entrada al objeto `SERIES` con `label`, `short`,
 `first`, `last`, `columns` (deben calzar exacto con el header de tu CSV) y
-`segments` (tramos de empalme con su fecha de corte y descripción). Sumá la key al
-array `SERIE_ORDER` en `app.js` y al objeto `CSV_DATA` en `data/bundle.js` (el texto
-completo del CSV como string). El resto (selector, cinta, validación de fechas)
-se arma solo.
+`segments` (tramos de empalme con su fecha de corte y descripción). Sumá la key
+al array `SERIE_ORDER` en `app.js`, y agregá el mapeo correspondiente en el
+script de actualización que vayas a usar para esa serie. Corré el script una
+vez — te arma el CSV y te regenera `data/bundle.js` solo. El resto (selector,
+cinta, validación de fechas) se arma solo.
 
-Los `data/*.csv` sueltos quedan en la carpeta solo como referencia/backup de la
-limpieza de datos — el sitio en sí lee todo de `data/bundle.js`, no de esos CSV.
+Los `data/*.csv` sueltos quedan en la carpeta solo como referencia/backup
+legible de la limpieza de datos — el sitio en sí lee todo de `data/bundle.js`,
+no de esos CSV. Si alguna vez tocás un CSV a mano, acordate de correr
+`python3 scripts/actualizar_datos.py` (sin argumentos alcanza) para que
+`bundle.js` quede sincronizado — si no, el sitio sigue mostrando los datos
+viejos aunque el CSV esté bien.

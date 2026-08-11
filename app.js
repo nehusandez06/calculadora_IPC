@@ -138,28 +138,32 @@ function renderRibbon(key, activeFrom=null, activeTo=null){
   const palette = ['#D8D2BE','#CBC4AC','#BEB598','#B1A783','#A49A6F','#978C5C'];
 
   s.segments.forEach((seg, i) => {
-    const span = monthsBetween(prev, seg.to);
+    // El último tramo es siempre "a fuente actual, sin fecha de corte" —
+    // se estira hasta el último mes real de datos (s.last), así no hay que
+    // tocar `segments` cada vez que se suman meses nuevos.
+    const segTo = (i === s.segments.length - 1) ? totalEnd : seg.to;
+    const span = monthsBetween(prev, segTo);
     const widthPct = Math.max(0.6, (span/totalSpan)*100);
     const div = document.createElement('div');
     div.className = 'seg';
     div.style.width = widthPct + '%';
     div.style.background = palette[i % palette.length];
 
-    const overlap = activeFrom && rangesOverlap(prev, seg.to, activeFrom, activeTo);
+    const overlap = activeFrom && rangesOverlap(prev, segTo, activeFrom, activeTo);
     if (overlap) div.classList.add('active');
 
     const tip = document.createElement('div');
     tip.className = 'tip';
-    tip.textContent = `${prev} a ${seg.to} — ${seg.label}`;
+    tip.textContent = `${prev} a ${segTo} — ${seg.label}`;
     div.appendChild(tip);
     ribbon.appendChild(div);
 
     const dot = document.createElement('span');
     dot.className = 'ribbon-legend-item';
-    dot.innerHTML = `<span class="dot" style="background:${palette[i % palette.length]}"></span>${seg.label} (${prev}–${seg.to})`;
+    dot.innerHTML = `<span class="dot" style="background:${palette[i % palette.length]}"></span>${seg.label} (${prev}–${segTo})`;
     legend.appendChild(dot);
 
-    prev = nextMonth(seg.to);
+    prev = nextMonth(segTo);
   });
 }
 
